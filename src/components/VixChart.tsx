@@ -80,6 +80,15 @@ const VixChart: React.FC = () => {
   if (loading) return <div>読み込み中...</div>;
   if (error) return <div>{error}</div>;
 
+  const formatDate = (date: string): string => {
+    const [, month, day] = date.split("-");
+    return `${month}/${day}`;
+  };
+
+  const formatValue = (value: number): string => {
+    return value.toFixed(2);
+  };
+
   return (
     <div style={{ width: "1200px", height: 400 }}>
       <h2>VIX（恐怖指数）チャート</h2>
@@ -91,12 +100,10 @@ const VixChart: React.FC = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
-            tickCount={12}
-            tickFormatter={(date) => {
-              const [, month, day] = date.split("-");
-              return `${month}/${day}`;
-            }}
-            reversed={false}
+            tickFormatter={formatDate}
+            angle={-45}
+            textAnchor="end"
+            height={60}
           />
           <YAxis
             domain={["dataMin - 10", "dataMax + 10"]}
@@ -104,10 +111,8 @@ const VixChart: React.FC = () => {
             tickFormatter={(value: number) => `${Math.round(value / 10) * 10}`}
           />
           <Tooltip
-            labelFormatter={(date) =>
-              new Date(date).toLocaleDateString("ja-JP")
-            }
-            formatter={(value) => [`${value}`, "VIX"]}
+            labelFormatter={(date: string) => formatDate(date)}
+            formatter={(value: number) => formatValue(value)}
           />
           <Legend />
           <Line
