@@ -9,6 +9,12 @@ body {
   align-items: center;
 }
 
+/* Amplifyのコンテナスタイルを上書き */
+[data-amplify-container] {
+  width: 100% !important;
+  max-width: none !important;
+}
+
 main {
   display: flex;
   flex-direction: column;
