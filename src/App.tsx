@@ -3,12 +3,15 @@ import type { Schema } from "../amplify/data/resource";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { generateClient } from "aws-amplify/data";
 import VixChart from "./components/VixChart";
+import "./App.css"; // このファイルを作成してください
 
 const client = generateClient<Schema>();
 
 function App() {
   const { user, signOut } = useAuthenticator();
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [emailStatus, setEmailStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     client.models.Todo.observeQuery().subscribe({
@@ -24,9 +27,37 @@ function App() {
     client.models.Todo.delete({ id });
   }
 
+  // メール送信処理
+  async function sendEmail() {
+    setIsLoading(true);
+    setEmailStatus("送信中...");
+
+    try {
+      const response = await fetch(
+        "https://l83ulam8pi.execute-api.ap-northeast-1.amazonaws.com/default/scheduledEmailSender",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        }
+      );
+
+      if (response.ok) {
+        setEmailStatus("✅ メールを送信しました！");
+        setTimeout(() => setEmailStatus(""), 5000);
+      } else {
+        setEmailStatus("❌ 送信エラー: " + (await response.text()));
+      }
+    } catch (error) {
+      console.error("エラー:", error);
+      setEmailStatus("❌ 接続エラー");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <main>
-      {/* <h1>My todos test</h1> */}
       <h1>{user?.signInDetails?.loginId}'s todos</h1>
       <button onClick={createTodo}>+ new</button>
       <ul>
@@ -37,6 +68,19 @@ function App() {
         ))}
       </ul>
 
+      {/* メール送信セクション */}
+      <div className="email-section">
+        <h3>メール通知</h3>
+        <button
+          onClick={sendEmail}
+          className="email-button"
+          disabled={isLoading}
+        >
+          {isLoading ? "送信中..." : "メールを送信"}
+        </button>
+        {emailStatus && <p className="email-status">{emailStatus}</p>}
+      </div>
+
       <div>
         🥳 App successfully hosted. Try creating a new todo.
         <br />
@@ -45,7 +89,6 @@ function App() {
         </a>
       </div>
       <button onClick={signOut}>Sign out</button>
-      {/* VIXチャートを追加 */}
       <VixChart />
     </main>
   );
