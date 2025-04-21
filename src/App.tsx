@@ -12,8 +12,19 @@ function App() {
   // メール送信処理
   async function sendEmail() {
     setIsLoading(true);
-    setEmailStatus("送信中...");
+    setEmailStatus("");
 
+    // メールアドレスの存在確認
+    const userEmail = user?.signInDetails?.loginId;
+    if (!userEmail) {
+      setEmailStatus(
+        "❌ メールアドレスが取得できません。再度ログインしてください。"
+      );
+      setIsLoading(false);
+      return;
+    }
+
+    setEmailStatus("送信中...");
     try {
       const response = await fetch(
         "https://qn6gj3ncw5.execute-api.ap-northeast-1.amazonaws.com/default/scheduledEmailSender",
@@ -21,7 +32,7 @@ function App() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email: user?.signInDetails?.loginId,
+            email: userEmail,
           }),
         }
       );
@@ -31,10 +42,10 @@ function App() {
         if (result.vixData) {
           setCurrentVIX(result.vixData.value);
           setEmailStatus(
-            `✅ メールを送信しました！最新VIX: ${result.vixData.value}`
+            `✅ ${userEmail} 宛にメールを送信しました！最新VIX: ${result.vixData.value}`
           );
         } else {
-          setEmailStatus("✅ メールを送信しました！");
+          setEmailStatus(`✅ ${userEmail} 宛にメールを送信しました！`);
         }
         setTimeout(() => setEmailStatus(""), 5000);
       } else {

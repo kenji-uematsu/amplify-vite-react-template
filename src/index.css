@@ -1,3 +1,44 @@
+:root {
+  /* カラーパレット */
+  --color-primary: #4caf50;
+  --color-secondary: #e91e63;
+  --color-error: #f44336;
+  --color-warning: #ff9800;
+  --color-info: #2196f3;
+  --color-light: #f5f5f5;
+  --color-dark: #333333;
+  --color-grey: #666666;
+  --color-border: #eaeaea;
+
+  /* フォントサイズ */
+  --font-small: 0.875rem;
+  --font-medium: 1rem;
+  --font-large: 1.5rem;
+  --font-xlarge: 2rem;
+
+  /* スペーシング */
+  --space-xs: 5px;
+  --space-sm: 10px;
+  --space-md: 20px;
+  --space-lg: 30px;
+  --space-xl: 40px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  color: var(--color-dark);
+  background-color: #fff;
+}
+
 body {
   margin: 0;
   background: linear-gradient(180deg, rgb(117, 81, 194), rgb(255, 255, 255));
@@ -7,6 +48,7 @@ body {
   width: 100vw;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 }
 
 main {
@@ -33,9 +75,11 @@ button {
   transition: border-color 0.25s;
   color: white;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -68,4 +112,15 @@ li:hover {
 a {
   font-weight: 800;
   text-decoration: none;
+  color: var(--color-info);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+  margin-bottom: var(--space-sm);
 }
