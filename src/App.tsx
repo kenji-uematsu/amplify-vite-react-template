@@ -1,31 +1,13 @@
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+import { useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { generateClient } from "aws-amplify/data";
 import VixChart from "./components/VixChart";
-import "./App.css"; // このファイルを作成してください
-
-const client = generateClient<Schema>();
+import "./App.css";
 
 function App() {
   const { user, signOut } = useAuthenticator();
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const [emailStatus, setEmailStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id });
-  }
+  const [currentVIX, setCurrentVIX] = useState<string | null>(null);
 
   // メール送信処理
   async function sendEmail() {
@@ -38,12 +20,22 @@ function App() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({}),
+          body: JSON.stringify({
+            email: user?.signInDetails?.loginId,
+          }),
         }
       );
 
       if (response.ok) {
-        setEmailStatus("✅ メールを送信しました！");
+        const result = await response.json();
+        if (result.vixData) {
+          setCurrentVIX(result.vixData.value);
+          setEmailStatus(
+            `✅ メールを送信しました！最新VIX: ${result.vixData.value}`
+          );
+        } else {
+          setEmailStatus("✅ メールを送信しました！");
+        }
         setTimeout(() => setEmailStatus(""), 5000);
       } else {
         setEmailStatus("❌ 送信エラー: " + (await response.text()));
@@ -57,39 +49,44 @@ function App() {
   }
 
   return (
-    <main>
-      <h1>{user?.signInDetails?.loginId}'s todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li onClick={() => deleteTodo(todo.id)} key={todo.id}>
-            {todo.content}
-          </li>
-        ))}
-      </ul>
+    <main className="vix-app">
+      <header>
+        <h1>VIX指数トラッカー</h1>
+        <div className="user-info">
+          <span>ログイン: {user?.signInDetails?.loginId}</span>
+          <button onClick={signOut} className="sign-out-btn">
+            ログアウト
+          </button>
+        </div>
+      </header>
 
-      {/* メール送信セクション */}
-      <div className="email-section">
-        <h3>メール通知</h3>
+      <section className="vix-actions">
+        <h2>VIX通知</h2>
+        <p>現在のVIX指数をメールで受け取ることができます。</p>
+
         <button
           onClick={sendEmail}
-          className="email-button"
+          className="vix-email-btn"
           disabled={isLoading}
         >
-          {isLoading ? "送信中..." : "メールを送信"}
+          {isLoading ? "送信中..." : "最新VIX情報をメールで受信"}
         </button>
-        {emailStatus && <p className="email-status">{emailStatus}</p>}
-      </div>
 
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-      <button onClick={signOut}>Sign out</button>
-      <VixChart />
+        {emailStatus && <p className="status-message">{emailStatus}</p>}
+        {currentVIX && (
+          <div className="current-vix">
+            現在のVIX: <span>{currentVIX}</span>
+          </div>
+        )}
+      </section>
+
+      <section className="vix-chart-container">
+        <VixChart />
+      </section>
+
+      <footer>
+        <p>データソース: Yahoo Finance - VIX指数(^VIX)</p>
+      </footer>
     </main>
   );
 }

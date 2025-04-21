@@ -40,3 +40,91 @@
 .read-the-docs {
   color: #888;
 }
+
+.vix-app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.sign-out-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.vix-actions {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.vix-email-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.vix-email-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.status-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.current-vix {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.current-vix span {
+  color: #e91e63;
+  font-size: 2rem;
+}
+
+.vix-chart-container {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  background-color: white;
+}
+
+footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eaeaea;
+  text-align: center;
+  color: #666;
+}
