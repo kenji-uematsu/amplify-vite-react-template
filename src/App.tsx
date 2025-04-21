@@ -34,7 +34,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "https://l83ulam8pi.execute-api.ap-northeast-1.amazonaws.com/default/scheduledEmailSender",
+        "https://qn6gj3ncw5.execute-api.ap-northeast-1.amazonaws.com/default/scheduledEmailSender",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
