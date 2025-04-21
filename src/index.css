@@ -9,16 +9,16 @@ body {
   align-items: center;
 }
 
-/* Amplifyのコンテナスタイルを上書き */
-[data-amplify-container] {
-  width: 100% !important;
-  max-width: none !important;
-}
-
 main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+}
+
+#root {
+  width: 100%;
+  max-width: 1200px;
+  padding: 16px;
 }
 
 button {

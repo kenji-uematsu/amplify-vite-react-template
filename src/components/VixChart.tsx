@@ -90,7 +90,7 @@ const VixChart: React.FC = () => {
   };
 
   return (
-    <div style={{ width: "1200px", height: 400 }}>
+    <div style={{ width: "100%", height: 400 }}>
       <h2>VIX（恐怖指数）チャート</h2>
       <ResponsiveContainer>
         <LineChart

@@ -1,0 +1,22 @@
+{
+  "name": "sendEmail",
+  "runtime": "nodejs18.x",
+  "handler": "index.handler",
+  "timeout": 30,
+  "memorySize": 128,
+  "environment": {
+    "variables": {
+      "REGION": "ap-northeast-1",
+      "USER_POOL_ID": "your-user-pool-id",
+      "VERIFIED_EMAIL": "your-verified-email@example.com"
+    }
+  },
+  "events": [
+    {
+      "type": "EventBridge",
+      "properties": {
+        "schedule": "cron(0 9 * * ? *)" // 毎日午前9時に実行
+      }
+    }
+  ]
+}
