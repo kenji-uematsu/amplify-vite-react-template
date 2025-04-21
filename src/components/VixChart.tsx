@@ -35,6 +35,7 @@ const VixChart: React.FC = () => {
   useEffect(() => {
     const fetchVixData = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `https://api.allorigins.win/raw?url=${encodeURIComponent(
             "https://query1.finance.yahoo.com/v8/finance/chart/^VIX?interval=1d&range=1y"
@@ -56,14 +57,18 @@ const VixChart: React.FC = () => {
             value: timeSeries.close[index],
             timestamp: timestamp,
           }))
-          .filter((item: ChartData) => item.value !== null)
-          .sort((a: ChartData, b: ChartData) => a.timestamp - b.timestamp)
-          .slice(-365) // 最新の1年間分のデータを取得
+          .filter((item: ChartData) => item.value !== null);
+
+        // ソートしてから最新365件を抽出
+        const sortedData = [...formattedData].sort(
+          (a: ChartData, b: ChartData) => a.timestamp - b.timestamp
+        );
+        const recentData = sortedData
+          .slice(-365)
           .map(({ date, value }: ChartData): SortedData => ({ date, value }));
 
-        setVixData(formattedData);
-        setLoading(false);
-        console.log("vixData", vixData);
+        console.log("処理済みデータサンプル:", recentData.slice(-5));
+        setVixData(recentData);
       } catch (err) {
         console.error("API Error:", err);
         setError(
@@ -71,9 +76,11 @@ const VixChart: React.FC = () => {
             err instanceof Error ? err.message : "不明なエラー"
           }`
         );
+      } finally {
         setLoading(false);
       }
     };
+
     fetchVixData();
   }, []);
 
