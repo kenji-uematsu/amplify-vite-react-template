@@ -121,7 +121,6 @@ const VixChart: React.FC = () => {
             labelFormatter={(date: string) => formatDate(date)}
             formatter={(value: number) => formatValue(value)}
           />
-          <Legend />
           <Line
             type="monotone"
             dataKey="value"
