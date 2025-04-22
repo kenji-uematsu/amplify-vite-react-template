@@ -140,9 +140,6 @@ const UserSettings: React.FC = () => {
         if (result.data?.id) {
           // 通常のケース
           setSettingId(result.data.id);
-        } else if (result.id) {
-          // 別の可能性のある構造
-          setSettingId(result.id);
         } else {
           console.error(
             "作成されたレコードからIDを取得できませんでした:",
