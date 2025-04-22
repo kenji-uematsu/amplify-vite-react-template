@@ -1,11 +1,4 @@
 /* メインコンテナ */
-#root {
-  width: 100%;
-  margin: 0 auto;
-  padding: var(--space-md);
-  text-align: center;
-}
-
 .card {
   padding: 2em;
 }

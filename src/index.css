@@ -58,7 +58,6 @@ main {
 #root {
   width: 100%;
   max-width: 1200px;
-  padding: 16px;
 }
 
 button {
