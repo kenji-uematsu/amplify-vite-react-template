@@ -162,6 +162,12 @@ footer {
   margin-left: var(--space-md);
   background-color: var(--color-light);
   border-radius: 4px;
+  transition: opacity 0.3s;
+}
+
+/* 無効化されたときの設定詳細エリアの見た目 */
+.setting-detail:has(input:disabled) {
+  opacity: 0.7;
 }
 
 .toggle-container {
@@ -188,6 +194,14 @@ footer {
   border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: var(--font-medium);
+}
+
+.time-input:disabled,
+.number-input:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #ddd;
 }
 
 .number-input {

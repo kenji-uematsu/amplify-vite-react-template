@@ -131,19 +131,18 @@ const UserSettings: React.FC = () => {
             </div>
           </div>
 
-          {dailyEnabled && (
-            <div className="setting-detail">
-              <label>
-                通知時間:
-                <input
-                  type="time"
-                  value={dailyTime}
-                  onChange={(e) => setDailyTime(e.target.value)}
-                  className="time-input"
-                />
-              </label>
-            </div>
-          )}
+          <div className="setting-detail">
+            <label>
+              通知時間:
+              <input
+                type="time"
+                value={dailyTime}
+                onChange={(e) => setDailyTime(e.target.value)}
+                className="time-input"
+                disabled={!dailyEnabled}
+              />
+            </label>
+          </div>
         </div>
 
         {/* 閾値通知設定 */}
@@ -165,24 +164,23 @@ const UserSettings: React.FC = () => {
             </div>
           </div>
 
-          {thresholdEnabled && (
-            <div className="setting-detail">
-              <label>
-                閾値:
-                <input
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={thresholdValue}
-                  onChange={(e) => setThresholdValue(Number(e.target.value))}
-                  className="number-input"
-                />
-              </label>
-              <p className="setting-help">
-                VIX指数が設定値を下から上に超えた場合に通知されます
-              </p>
-            </div>
-          )}
+          <div className="setting-detail">
+            <label>
+              閾値:
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={thresholdValue}
+                onChange={(e) => setThresholdValue(Number(e.target.value))}
+                className="number-input"
+                disabled={!thresholdEnabled}
+              />
+            </label>
+            <p className="setting-help">
+              VIX指数が設定値を下から上に超えた場合に通知されます
+            </p>
+          </div>
         </div>
 
         {/* アクションボタン */}
