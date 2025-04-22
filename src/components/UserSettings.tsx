@@ -250,9 +250,9 @@ const UserSettings: React.FC = () => {
 
         {/* アクションボタン */}
         <div className="settings-actions">
-          {saveStatus && <p className="save-status">{saveStatus}</p>}
           <button className="save-button" onClick={saveSettings}>
             設定を保存
+            {saveStatus && <p className="save-status">{saveStatus}</p>}
           </button>
           <button className="back-button" onClick={goHome}>
             ホームに戻る
