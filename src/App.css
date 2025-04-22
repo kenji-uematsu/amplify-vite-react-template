@@ -30,6 +30,11 @@ header {
   border-bottom: 1px solid var(--color-border);
 }
 
+.header-container {
+  display: flex;
+  align-items: center;
+}
+
 .user-info {
   display: flex;
   align-items: center;
@@ -57,7 +62,6 @@ header {
   padding: 12px 20px;
   border-radius: 4px;
   font-weight: bold;
-  margin-top: var(--space-sm);
   transition: background-color 0.3s;
 }
 
