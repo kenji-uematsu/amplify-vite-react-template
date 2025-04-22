@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import VixChart from "./components/VixChart";
+import Header from "./components/Header"; // ヘッダーコンポーネントをインポート
 import "./App.css";
 
 function App() {
@@ -61,17 +62,8 @@ function App() {
 
   return (
     <main className="vix-app">
-      <header>
-        <div className="header-container">
-          <h3>VIX指数トラッカー</h3>
-          <div className="user-info">
-            <span>{user?.signInDetails?.loginId}</span>
-            <button onClick={signOut} className="sign-out-btn">
-              ログアウト
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* ヘッダーコンポーネントを使用 */}
+      <Header userEmail={user?.signInDetails?.loginId} onSignOut={signOut} />
 
       <section className="vix-actions">
         <button
@@ -81,7 +73,15 @@ function App() {
         >
           {isLoading ? "送信中..." : "現在のVIXをメールで受信"}
         </button>
-        {emailStatus && <p className="status-message">{emailStatus}</p>}
+        {emailStatus && (
+          <p
+            className={`status-message ${
+              emailStatus.includes("❌") ? "error" : "success"
+            }`}
+          >
+            {emailStatus}
+          </p>
+        )}
         {currentVIX && (
           <div className="current-vix">
             現在のVIX: <span>{currentVIX}</span>
