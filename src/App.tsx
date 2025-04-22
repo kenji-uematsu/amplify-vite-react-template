@@ -64,7 +64,7 @@ function App() {
       <header>
         <h1>VIX指数トラッカー</h1>
         <div className="user-info">
-          <span>ログイン: {user?.signInDetails?.loginId}</span>
+          <span>{user?.signInDetails?.loginId}</span>
           <button onClick={signOut} className="sign-out-btn">
             ログアウト
           </button>
@@ -72,9 +72,6 @@ function App() {
       </header>
 
       <section className="vix-actions">
-        <h2>VIX通知</h2>
-        <p>現在のVIX指数をメールで受け取ることができます。</p>
-
         <button
           onClick={sendEmail}
           className="vix-email-btn"
