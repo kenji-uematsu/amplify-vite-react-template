@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import VixChart from "./components/VixChart";
-import Header from "./components/Header"; // ヘッダーコンポーネントをインポート
+import Header from "./components/Header";
+import UserSettings from "./components/UserSettings";
 import "./App.css";
 
-function App() {
+// メインコンテンツをコンポーネントとして分離
+const Home = () => {
   const { user, signOut } = useAuthenticator();
   const [emailStatus, setEmailStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +65,6 @@ function App() {
 
   return (
     <main className="vix-app">
-      {/* ヘッダーコンポーネントを使用 */}
       <Header userEmail={user?.signInDetails?.loginId} onSignOut={signOut} />
 
       <section className="vix-actions">
@@ -97,6 +99,18 @@ function App() {
         <p>データソース: Yahoo Finance - VIX指数(^VIX)</p>
       </footer>
     </main>
+  );
+};
+
+// メインアプリでルーティングを設定
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/settings" element={<UserSettings />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

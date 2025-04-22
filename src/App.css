@@ -131,3 +131,39 @@ footer {
   color: var(--color-grey);
   font-size: var(--font-small);
 }
+
+/* ユーザーメールアドレスのスタイル */
+.user-email {
+  cursor: pointer;
+  color: var(--color-info);
+  transition: color 0.3s;
+  text-decoration: underline;
+}
+
+.user-email:hover {
+  color: var(--color-secondary);
+}
+
+/* 設定ページのスタイル */
+.settings-container {
+  background-color: white;
+  padding: var(--space-lg);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: var(--space-md);
+}
+
+.back-button {
+  background-color: var(--color-info);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-top: var(--space-md);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #1976d2;
+}
