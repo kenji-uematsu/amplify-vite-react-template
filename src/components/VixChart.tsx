@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -10,24 +9,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface VixData {
-  date: string;
-  value: number;
-}
-
 interface ChartData {
-  date: string;
-  value: number;
-  timestamp: number;
-}
-
-interface SortedData {
   date: string;
   value: number;
 }
 
 const VixChart: React.FC = () => {
-  const [vixData, setVixData] = useState<VixData[]>([]);
+  const [vixData, setVixData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,43 +23,34 @@ const VixChart: React.FC = () => {
     const fetchVixData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `https://api.allorigins.win/raw?url=${encodeURIComponent(
-            "https://query1.finance.yahoo.com/v8/finance/chart/^VIX?interval=1d&range=1y"
-          )}`
+
+        // Lambda関数からチャートデータを取得
+        const response = await fetch(
+          "https://qn6gj3ncw5.execute-api.ap-northeast-1.amazonaws.com/default/scheduledEmailSender",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "getVixHistory", // 履歴データ取得のアクション指定
+            }),
+          }
         );
 
-        if (!response.data.chart?.result?.[0]) {
-          throw new Error("データ形式が不正です");
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
         }
 
-        const result = response.data.chart.result[0];
-        console.log("result", result);
-        const timeSeries = result.indicators.quote[0];
-        const timestamps = result.timestamp;
+        const result = await response.json();
 
-        const formattedData = timestamps
-          .map((timestamp: number, index: number) => ({
-            date: new Date(timestamp * 1000).toISOString().split("T")[0],
-            value: timeSeries.close[index],
-            timestamp: timestamp,
-          }))
-          .filter((item: ChartData) => item.value !== null);
-
-        // ソートしてから最新365件を抽出
-        const sortedData = [...formattedData].sort(
-          (a: ChartData, b: ChartData) => a.timestamp - b.timestamp
-        );
-        const recentData = sortedData
-          .slice(-365)
-          .map(({ date, value }: ChartData): SortedData => ({ date, value }));
-
-        console.log("処理済みデータサンプル:", recentData.slice(-5));
-        setVixData(recentData);
+        if (result.chartData && Array.isArray(result.chartData)) {
+          setVixData(result.chartData);
+        } else {
+          throw new Error("チャートデータの形式が不正です");
+        }
       } catch (err) {
         console.error("API Error:", err);
         setError(
-          `データの取得に失敗しました: ${
+          `チャートデータの取得に失敗しました: ${
             err instanceof Error ? err.message : "不明なエラー"
           }`
         );
@@ -83,25 +62,27 @@ const VixChart: React.FC = () => {
     fetchVixData();
   }, []);
 
-  if (loading) return <div>読み込み中...</div>;
-  if (error) return <div>{error}</div>;
-
-  const formatDate = (date: string): string => {
-    const [, month, day] = date.split("-");
-    return `${month}/${day}`;
+  // 日付のフォーマット関数
+  const formatDate = (date: string) => {
+    const d = new Date(date);
+    return `${d.getMonth() + 1}/${d.getDate()}`;
   };
 
-  const formatValue = (value: number): string => {
-    return value.toFixed(2);
+  // 値のフォーマット関数
+  const formatValue = (value: number) => {
+    return `${value.toFixed(2)}`;
   };
+
+  if (loading) return <div>チャートデータを読み込み中...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+  if (vixData.length === 0) return <div>表示するデータがありません</div>;
 
   return (
     <div style={{ width: "100%", height: 400 }}>
-      <h2>VIX（恐怖指数）チャート</h2>
       <ResponsiveContainer>
         <LineChart
           data={vixData}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          margin={{ top: 5, right: 30, left: 20, bottom: 60 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -112,9 +93,9 @@ const VixChart: React.FC = () => {
             height={60}
           />
           <YAxis
-            domain={["dataMin - 10", "dataMax + 10"]}
+            domain={["dataMin - 5", "dataMax + 5"]}
             tickCount={6}
-            tickFormatter={(value: number) => `${Math.round(value / 10) * 10}`}
+            tickFormatter={(value: number) => `${Math.round(value)}`}
           />
           <Tooltip
             labelFormatter={(date: string) => formatDate(date)}
