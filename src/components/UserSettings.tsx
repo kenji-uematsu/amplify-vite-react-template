@@ -25,34 +25,63 @@ const UserSettings: React.FC = () => {
     const fetchUserSettings = async () => {
       if (!user) return;
 
-      // ユーザー名を取得 - 一貫した方法を使用
-      const userId = user.username; // userIdを一貫して使う
-
       try {
         setLoading(true);
 
-        console.log("ユーザー情報:", userId); // デバッグログ
-
-        // ユーザーの既存設定を取得
-        const response = await client.models.VixNotification.list({
-          filter: { owner: { eq: userId } },
+        // デバッグ情報を追加
+        console.log("認証情報:", {
+          username: user.username,
+          userId: user.userId,
+          signInDetails: user.signInDetails,
         });
 
-        console.log("取得結果:", response); // デバッグログ
+        // ユーザーの既存設定を取得 - クエリを変更
+        const response = await client.models.VixNotification.list();
+
+        // 全レスポンスを確認
+        console.log("全設定取得結果:", response);
 
         if (response.data.length > 0) {
-          // 既存設定がある場合は読み込む
-          const settings = response.data[0];
-          setSettingId(settings.id);
+          // 自分の設定を見つける
+          const mySettings = response.data.find(
+            (item) =>
+              // 明示的にownerフィールドを確認
+              item.owner === user.username ||
+              // メールアドレスでも確認
+              item.email === user.signInDetails?.loginId
+          );
 
-          // nullチェックを追加して安全に値を設定
-          if (
-            settings.dailyEnabled !== null &&
-            settings.dailyEnabled !== undefined
-          ) {
-            setDailyEnabled(settings.dailyEnabled);
+          console.log("自分の設定:", mySettings);
+
+          if (mySettings) {
+            setSettingId(mySettings.id);
+
+            // 設定値を読み込み
+            if (
+              mySettings.dailyEnabled !== null &&
+              mySettings.dailyEnabled !== undefined
+            ) {
+              setDailyEnabled(mySettings.dailyEnabled);
+            }
+
+            if (mySettings.dailyTime) {
+              setDailyTime(mySettings.dailyTime);
+            }
+
+            if (
+              mySettings.thresholdEnabled !== null &&
+              mySettings.thresholdEnabled !== undefined
+            ) {
+              setThresholdEnabled(mySettings.thresholdEnabled);
+            }
+
+            if (
+              mySettings.thresholdValue !== null &&
+              mySettings.thresholdValue !== undefined
+            ) {
+              setThresholdValue(mySettings.thresholdValue);
+            }
           }
-          // 他のフィールドも同様に設定
         }
       } catch (error) {
         console.error("設定の読み込みに失敗しました", error);
@@ -74,15 +103,10 @@ const UserSettings: React.FC = () => {
       // どちらかの通知が有効な場合はisEnabledをtrueに
       const isEnabled = dailyEnabled || thresholdEnabled;
 
-      // コンソールにデバッグ情報を出力
-      console.log("保存する設定:", {
-        id: settingId,
-        dailyEnabled,
-        dailyTime,
-        thresholdEnabled,
-        thresholdValue,
-        isEnabled,
-        owner: user.username,
+      // デバッグ情報
+      console.log("保存するユーザー情報:", {
+        username: user.username,
+        email: user.signInDetails?.loginId,
       });
 
       if (settingId) {
@@ -94,9 +118,11 @@ const UserSettings: React.FC = () => {
           thresholdEnabled,
           thresholdValue,
           isEnabled,
+          // 明示的にownerフィールドを設定
+          // owner: user.username, // このフィールドは通常自動設定されるため不要
         });
 
-        console.log("更新結果:", result); // 更新結果をログ出力
+        console.log("更新結果:", result);
       } else {
         // 新規設定を作成
         const result = await client.models.VixNotification.create({
@@ -108,10 +134,20 @@ const UserSettings: React.FC = () => {
           isEnabled,
         });
 
-        console.log("作成結果:", result); // 作成結果をログ出力
+        console.log("作成結果:", JSON.stringify(result));
 
-        if (result.data) {
+        // resultsの構造を確認し、正しいidの取得方法を使用
+        if (result.data?.id) {
+          // 通常のケース
           setSettingId(result.data.id);
+        } else if (result.id) {
+          // 別の可能性のある構造
+          setSettingId(result.id);
+        } else {
+          console.error(
+            "作成されたレコードからIDを取得できませんでした:",
+            result
+          );
         }
       }
 
@@ -119,9 +155,11 @@ const UserSettings: React.FC = () => {
       setTimeout(() => setSaveStatus(""), 3000);
     } catch (error) {
       console.error("設定の保存に失敗しました", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "不明なエラー";
-      setSaveStatus(`❌ 保存に失敗しました: ${errorMessage}`);
+      setSaveStatus(
+        `❌ 保存に失敗しました: ${
+          error instanceof Error ? error.message : "不明なエラー"
+        }`
+      );
     }
   };
 
