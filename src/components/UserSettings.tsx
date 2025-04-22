@@ -148,7 +148,7 @@ const UserSettings: React.FC = () => {
         }
       }
 
-      setSaveStatus("✅ 設定を保存しました");
+      setSaveStatus("設定を保存しました");
       setTimeout(() => setSaveStatus(""), 3000);
     } catch (error) {
       console.error("設定の保存に失敗しました", error);
