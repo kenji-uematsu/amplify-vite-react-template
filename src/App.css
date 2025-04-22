@@ -225,10 +225,19 @@ footer {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
+  min-width: 150px;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .save-button:hover {
   background-color: #388e3c;
+}
+
+/* 保存中アニメーション (オプション) */
+.save-button:disabled {
+  background-color: var(--color-light);
+  cursor: not-allowed;
 }
 
 .back-button {
