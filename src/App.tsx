@@ -62,13 +62,13 @@ function App() {
   return (
     <main className="vix-app">
       <header>
-        <h1>VIX指数トラッカー</h1>
+        <h3>VIX指数トラッカー</h3>
         <button
           onClick={sendEmail}
           className="vix-email-btn"
           disabled={isLoading}
         >
-          {isLoading ? "送信中..." : "最新VIX情報をメールで受信"}
+          {isLoading ? "送信中..." : "現在のVIXをメールで受信"}
         </button>
         <div className="user-info">
           <span>{user?.signInDetails?.loginId}</span>
