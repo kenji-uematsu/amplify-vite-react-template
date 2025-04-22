@@ -1,12 +1,21 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
-// Todo モデルを削除し、VIX関連モデルを追加
 const schema = a.schema({
-  // VIX通知設定モデル
+  // VIX通知設定モデル - デフォルト値なしで定義
   VixNotification: a
     .model({
       email: a.string().required(),
-      isEnabled: a.boolean().default(true),
+      isEnabled: a.boolean(), // デフォルト値なし
+
+      // 日時通知設定
+      dailyEnabled: a.boolean(), // デフォルト値なし
+      dailyTime: a.string(), // デフォルト値なし
+
+      // 閾値通知設定
+      thresholdEnabled: a.boolean(), // デフォルト値なし
+      thresholdValue: a.integer(), // デフォルト値なし
+
+      // 最終通知時刻
       lastNotified: a.string(),
     })
     .authorization((allow) => [allow.owner()]),

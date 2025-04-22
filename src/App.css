@@ -129,8 +129,9 @@ footer {
 .user-email {
   cursor: pointer;
   color: var(--color-info);
-  transition: color 0.3s;
   text-decoration: underline;
+  font-weight: bold;
+  transition: color 0.3s;
 }
 
 .user-email:hover {
@@ -142,8 +143,78 @@ footer {
   background-color: white;
   padding: var(--space-lg);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-top: var(--space-md);
+}
+
+.setting-section {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.setting-option {
+  margin: var(--space-md) 0;
+}
+
+.setting-detail {
+  padding: var(--space-sm) var(--space-md);
+  margin-left: var(--space-md);
+  background-color: var(--color-light);
+  border-radius: 4px;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-label {
+  margin-left: var(--space-sm);
+  font-weight: 500;
+}
+
+.setting-help {
+  font-size: var(--font-small);
+  color: var(--color-grey);
+  margin-top: var(--space-xs);
+}
+
+.time-input,
+.number-input {
+  margin-left: var(--space-sm);
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: var(--font-medium);
+}
+
+.number-input {
+  width: 80px;
+}
+
+.settings-actions {
+  margin-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: flex-start;
+}
+
+.save-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #388e3c;
 }
 
 .back-button {
@@ -152,11 +223,15 @@ footer {
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
-  margin-top: var(--space-md);
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .back-button:hover {
   background-color: #1976d2;
+}
+
+.save-status {
+  margin-bottom: var(--space-sm);
+  font-weight: bold;
 }
