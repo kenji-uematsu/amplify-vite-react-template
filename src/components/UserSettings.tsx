@@ -112,21 +112,23 @@ const UserSettings: React.FC = () => {
     <div className="vix-app">
       <Header userEmail={user?.signInDetails?.loginId} onSignOut={signOut} />
 
+      <h2>通知設定</h2>
       <div className="settings-container">
-        <h2>通知設定</h2>
-
         {/* 日時通知設定 */}
         <div className="setting-section">
           <h3>定時通知</h3>
           <div className="setting-option">
-            <label className="toggle-container">
-              <input
-                type="checkbox"
-                checked={dailyEnabled}
-                onChange={(e) => setDailyEnabled(e.target.checked)}
-              />
+            <div className="toggle-container">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={dailyEnabled}
+                  onChange={(e) => setDailyEnabled(e.target.checked)}
+                />
+                <span className="toggle-slider"></span>
+              </label>
               <span className="toggle-label">毎日指定時間にメール通知</span>
-            </label>
+            </div>
           </div>
 
           {dailyEnabled && (
@@ -148,16 +150,19 @@ const UserSettings: React.FC = () => {
         <div className="setting-section">
           <h3>閾値通知</h3>
           <div className="setting-option">
-            <label className="toggle-container">
-              <input
-                type="checkbox"
-                checked={thresholdEnabled}
-                onChange={(e) => setThresholdEnabled(e.target.checked)}
-              />
+            <div className="toggle-container">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={thresholdEnabled}
+                  onChange={(e) => setThresholdEnabled(e.target.checked)}
+                />
+                <span className="toggle-slider"></span>
+              </label>
               <span className="toggle-label">
                 VIX指数が閾値を超えたらメール通知
               </span>
-            </label>
+            </div>
           </div>
 
           {thresholdEnabled && (
