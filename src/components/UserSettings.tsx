@@ -17,7 +17,7 @@ const UserSettings: React.FC = () => {
   const [dailyEnabled, setDailyEnabled] = useState(false);
   const [dailyTime, setDailyTime] = useState("08:00");
   const [thresholdEnabled, setThresholdEnabled] = useState(false);
-  const [thresholdValue, setThresholdValue] = useState(20);
+  const [thresholdValue, setThresholdValue] = useState<string | number>("20");
   const [settingId, setSettingId] = useState<string | null>(null);
 
   // 設定を読み込む
@@ -116,10 +116,8 @@ const UserSettings: React.FC = () => {
           dailyEnabled,
           dailyTime,
           thresholdEnabled,
-          thresholdValue,
+          thresholdValue: thresholdValue === "" ? 0 : Number(thresholdValue),
           isEnabled,
-          // 明示的にownerフィールドを設定
-          // owner: user.username, // このフィールドは通常自動設定されるため不要
         });
 
         console.log("更新結果:", result);
@@ -130,7 +128,7 @@ const UserSettings: React.FC = () => {
           dailyEnabled,
           dailyTime,
           thresholdEnabled,
-          thresholdValue,
+          thresholdValue: thresholdValue === "" ? 0 : Number(thresholdValue),
           isEnabled,
         });
 
@@ -237,7 +235,10 @@ const UserSettings: React.FC = () => {
                 min="1"
                 max="100"
                 value={thresholdValue}
-                onChange={(e) => setThresholdValue(Number(e.target.value))}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setThresholdValue(val === "" ? "" : Number(val));
+                }}
                 className="number-input"
                 disabled={!thresholdEnabled}
               />
