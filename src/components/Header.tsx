@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+// Material UIアイコンのインポート
+import LogoutIcon from "@mui/icons-material/Logout";
 
 interface HeaderProps {
   userEmail: string | undefined;
@@ -28,8 +30,12 @@ const Header: React.FC<HeaderProps> = ({ userEmail, onSignOut }) => {
           >
             {userEmail}
           </span>
-          <button onClick={onSignOut} className="sign-out-btn">
-            ログアウト
+          <button
+            onClick={onSignOut}
+            className="sign-out-btn"
+            title="ログアウト" // ツールチップでログアウトであることを表示
+          >
+            <LogoutIcon />
           </button>
         </div>
       </div>
