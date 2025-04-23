@@ -236,8 +236,24 @@ const UserSettings: React.FC = () => {
                 max="100"
                 value={thresholdValue}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  setThresholdValue(val === "" ? "" : Number(val));
+                  // 全角数字を半角に変換し、その他の全角文字を除外
+                  const inputVal = e.target.value;
+                  const convertedVal = inputVal
+                    .split("")
+                    .map((char) => {
+                      const code = char.charCodeAt(0);
+                      // 全角数字(0xFF10-0xFF19)を半角に変換
+                      if (code >= 65296 && code <= 65305) {
+                        return String.fromCharCode(code - 65248);
+                      }
+                      // 半角数字のみ許可
+                      return /\d/.test(char) ? char : "";
+                    })
+                    .join("");
+
+                  setThresholdValue(
+                    convertedVal === "" ? "" : Number(convertedVal)
+                  );
                 }}
                 className="number-input"
                 disabled={!thresholdEnabled}
