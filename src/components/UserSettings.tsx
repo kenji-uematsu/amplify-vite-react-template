@@ -231,18 +231,18 @@ const UserSettings: React.FC = () => {
             <label>
               閾値:
               <input
-                type="number"
+                type="text" // number から text に変更
                 min="1"
                 max="100"
                 value={thresholdValue}
                 onChange={(e) => {
-                  // 全角数字を半角に変換し、その他の全角文字を除外
+                  // 変換処理は維持
                   const inputVal = e.target.value;
                   const convertedVal = inputVal
                     .split("")
                     .map((char) => {
                       const code = char.charCodeAt(0);
-                      // 全角数字(0xFF10-0xFF19)を半角に変換
+                      // 全角数字(0xFF10-0xFF19)を半角に変換して保持
                       if (code >= 65296 && code <= 65305) {
                         return String.fromCharCode(code - 65248);
                       }
@@ -251,9 +251,23 @@ const UserSettings: React.FC = () => {
                     })
                     .join("");
 
-                  setThresholdValue(
-                    convertedVal === "" ? "" : Number(convertedVal)
-                  );
+                  setThresholdValue(convertedVal === "" ? "" : convertedVal);
+                }}
+                // IME確定時の処理を追加
+                onCompositionEnd={(e) => {
+                  const inputVal = e.currentTarget.value;
+                  const convertedVal = inputVal
+                    .split("")
+                    .map((char) => {
+                      const code = char.charCodeAt(0);
+                      if (code >= 65296 && code <= 65305) {
+                        return String.fromCharCode(code - 65248);
+                      }
+                      return /\d/.test(char) ? char : "";
+                    })
+                    .join("");
+
+                  setThresholdValue(convertedVal === "" ? "" : convertedVal);
                 }}
                 className="number-input"
                 disabled={!thresholdEnabled}
