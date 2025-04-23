@@ -10,6 +10,7 @@ const schema = a.schema({
       thresholdEnabled: a.boolean(),
       thresholdValue: a.integer(),
       lastNotified: a.string(),
+      lastVixValue: a.float(),
     })
     .authorization((allow) => [allow.owner()]), // ownerベースの認証
 });
